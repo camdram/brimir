@@ -1,0 +1,10 @@
+app_name: brimir
+log_root: log
+pid_root: tmp/pids
+console_command: bundle exec rails console
+env:
+  RAILS_ENV: production
+  RAILS_MAX_THREADS: 2
+processes:
+  web:
+    log_file_name: webrick.log
