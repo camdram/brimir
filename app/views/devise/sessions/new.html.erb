@@ -43,7 +43,7 @@
       <p class="text-center">
         <% unless Rails.application.secrets[:camdram_client_id].blank? %>
         <%= t(:omniauth_sign_in_title) %>:
-          <%= link_to user_omniauth_authorize_path(:camdram_oauth2) do %>
+          <%= link_to user_omniauth_authorize_path(:camdram) do %>
             <i class="fa"></i>
             <%= t(:omniauth_sign_in_camdram) %>
           <% end %>
