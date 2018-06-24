@@ -16,34 +16,26 @@
 
 class OmniauthController < Devise::OmniauthCallbacksController
 
-  def google_oauth2
-    auth = request.env['omniauth.auth']
-
-    @identity = Identity.find_with_omniauth(auth)
-
-    if @identity.nil?
-      @identity = Identity.create_with_omniauth(auth)
-    end
-
-    if signed_in?
-      if @identity.user == current_user
-        redirect_to root_url, notice: I18n.translate(:already_linked_accounts)
-      else
-        # the identity is not associated with the current_user so lets
-        # associate the identity
-        @identity.user = current_user
-        @identity.save
-        redirect_to root_url, notice: I18n.translate(:successfully_linked_account)
+  def camdram
+    @auth = request.env['omniauth.auth']
+    @user = User.from_omniauth(@auth)
+    if @user.persisted?
+      oauth_token = @auth['credentials'].token
+      uri = URI("https://www.camdram.net/auth/account/organisations.json?access_token=#{oauth_token}")
+      response = Net::HTTP.get_response(uri)
+      raise "HTTP error" if !response == Net::HTTPSuccess
+      societies = JSON.parse(response.body)
+      societies.each do |soc|
+        if soc["id"].to_s == "38" # Camdram meta-society ID
+          sign_in_and_redirect @user, event: :authentication
+          set_flash_message(:notice, :success, kind: "Camdram") if is_navigational_format?
+          return
+        end
       end
+      raise "Not a Camdram administrator"
     else
-      if @identity.user.present?
-        flash[:notice] = I18n.t 'devise.omniauth_callbacks.success', kind: 'Google'
-        sign_in_and_redirect @identity.user, event: :authentication
-      else
-        # no user associated with the identity so we reject this attemp
-        redirect_to new_user_session_path, alert: I18n.translate(:not_linked_account_cant_login)
-      end
     end
+
   end
 
   def failure

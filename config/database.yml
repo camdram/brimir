@@ -19,8 +19,8 @@ test:
   timeout: 5000
 
 production:
-  adapter: postgresql
-  host:
+  adapter: mysql2
+  host: localhost
   database:
   username:
   password:

@@ -90,3 +90,5 @@ gem 'trix'
 
 # React support
 gem 'react-rails'
+
+gem 'omniauth-camdram'

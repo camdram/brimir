@@ -153,9 +153,9 @@ en:
 
 # users/edit
   edit_user: Edit User
-  omniauth_connect_title: Authentication using Google
-  omniauth_connect_text: Activate authentication using a Google Account. Afterwards you can use "Sign in with Google" as an alternative to the default email address and password login.
-  omniauth_connect_google_text: Connect with Google
+  omniauth_connect_title: Authentication using Camdram
+  omniauth_connect_text: Activate authentication using a Camdram Account.
+  omniauth_connect_camdram_text: Connect with Camdram
   remove_user: Remove user
 
 # users/index
@@ -209,14 +209,14 @@ en:
   draft_saved: Draft saved
 
 # controllers/omniauth
-  already_linked_accounts: Already linked with Google Account
-  successfully_linked_account: Successfully linked with Google Account
+  already_linked_accounts: Already linked with Camdram Account
+  successfully_linked_account: Successfully linked with Camdram Account
   not_linked_account_cant_login: There is no user attached to this provider yet. Please sign in first and connect through the personal settings screen.
-  third_party_failure: An error occured during authentication. Did you enable "Contacts API" and "Google+ API" via the Google API console?
+  third_party_failure: An error occured during authentication.
 
 # user/sign_in (omniauth)
   omniauth_sign_in_title: Alternative sign in
-  omniauth_sign_in_google: Google
+  omniauth_sign_in_camdram: Camdram
 
 # rules/index
   new_rule: New rule

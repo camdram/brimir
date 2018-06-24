@@ -17,7 +17,7 @@
 class User < ActiveRecord::Base
   devise Rails.application.config.devise_authentication_strategy, :recoverable,
     :rememberable, :trackable, :validatable,:omniauthable,
-    omniauth_providers: [:google_oauth2]
+    omniauth_providers: [:camdram]
 
   has_many :tickets, dependent: :destroy
   has_many :replies, dependent: :destroy
@@ -120,6 +120,14 @@ class User < ActiveRecord::Base
   def generate_password
     if encrypted_password.blank?
       self.password = Devise.friendly_token.first(12)
+    end
+  end
+
+  def self.from_omniauth(auth)
+    where(email: auth.info.email).first_or_create do |user|
+       user.email = auth.info.email
+       user.password = Devise.friendly_token[0,20]
+       user.name = auth.info.name
     end
   end
 end
