@@ -21,6 +21,6 @@ test:
 production:
   adapter: mysql2
   host: localhost
-  database:
-  username:
-  password:
+  database: <%= ENV["DB_NAME"] %>
+  username: <%= ENV["DB_USER"] %>
+  password: <%= ENV["DB_PASS"] %>
