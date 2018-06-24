@@ -1,5 +1,9 @@
 Brimir::Application.routes.draw do
 
+  # We are only using Camdram OAuth authentication
+  # so force a redirect to bypass normal Brimir login page
+  get '/users/sign_in', to: redirect('/users/auth/camdram')
+
   devise_for :users, controllers: { omniauth_callbacks: 'omniauth' }
 
   resources :users do
