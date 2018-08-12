@@ -161,9 +161,13 @@ class TicketsController < ApplicationController
 
   def create
     # the hook that is triggered when receiving an email.
+
+    # Addition to support receiving a base64-encoded message field from Postal
+    message = params[:base64] ? Base64.decode64(params[:message]) : params[:message]
+
     if params[:format] == 'json'
       using_hook = true # we assume different policies to create a ticket when we receive an email
-      @ticket = TicketMailer.receive(params[:message])
+      @ticket = TicketMailer.receive(message)
       if @tenant.notify_client_when_ticket_is_created
         # we should always have a (default) template when option is selected
         template = EmailTemplate.by_kind('ticket_received').active.first
@@ -249,6 +253,7 @@ class TicketsController < ApplicationController
   end
 
   def notify_incoming(ticket)
-    NotificationMailer.incoming_message ticket, params[:message]
+    message = params[:base64] ? Base64.decode64(params[:message]) : params[:message]
+    NotificationMailer.incoming_message ticket, message
   end
 end
