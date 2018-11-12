@@ -134,19 +134,6 @@
               multiple: true, class: 'select2 mbl', tabindex: tabindex } %>
         <% end %>
 
-        <% unless Rails.application.secrets[:camdram_client_id].blank? %>
-
-          <h5><%= t(:omniauth_connect_title) %></h5>
-
-          <p><%= t(:omniauth_connect_text) %></p>
-
-          <%= link_to user_omniauth_authorize_path(:camdram) do %>
-            <i class="fa"></i>
-            <%= t(:omniauth_connect_camdram_text) %>
-          <% end %>
-
-        <% end %>
-
       </div>
     </div>
     <div class="row">
