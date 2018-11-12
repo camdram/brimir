@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # replies to tickets, made by a user, possibly with attachments
-class Reply < ActiveRecord::Base
+class Reply < ApplicationRecord
   include CreateFromUser
   include EmailMessage
   include ReplyNotifications
@@ -27,7 +27,7 @@ class Reply < ActiveRecord::Base
   validates :ticket_id, :content, presence: true
 
   belongs_to :ticket, touch: true
-  belongs_to :user
+  belongs_to :user, optional: true
 
   accepts_nested_attributes_for :ticket
 
@@ -65,5 +65,27 @@ class Reply < ActiveRecord::Base
 
   def first?
     reply_to_type == 'Ticket'
+  end
+
+  def to_ticket
+    Ticket.new(
+      content: self.content,
+      subject: self.ticket.subject,
+      created_at: self.created_at,
+      updated_at: self.updated_at,
+      user_id: self.user_id,
+      message_id: self.message_id,
+      content_type: self.content_type,
+      raw_message_file_name: self.raw_message_file_name,
+      raw_message_content_type: self.raw_message_content_type,
+      raw_message_file_size: self.raw_message_file_size,
+      raw_message_updated_at: self.raw_message_updated_at,
+      notified_user_ids: self.notified_user_ids,
+      attachments: self.attachments.collect { |attachment|
+        new_attachment = attachment.dup
+        new_attachment.file = attachment.file
+        new_attachment
+      }
+    )
   end
 end

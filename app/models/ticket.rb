@@ -14,17 +14,17 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class Ticket < ActiveRecord::Base
+class Ticket < ApplicationRecord
   include CreateFromUser
   include EmailMessage
   include TicketMerge
 
   validates_presence_of :user_id
 
-  belongs_to :user
-  belongs_to :assignee, class_name: 'User'
-  belongs_to :to_email_address, -> { EmailAddress.verified }, class_name: 'EmailAddress'
-  belongs_to :locked_by, class_name: 'User'
+  belongs_to :user, optional: false
+  belongs_to :assignee, class_name: 'User', optional: true
+  belongs_to :to_email_address, -> { EmailAddress.verified }, class_name: 'EmailAddress', optional: true
+  belongs_to :locked_by, class_name: 'User', optional: true
 
   has_many :replies, dependent: :destroy
   has_many :labelings, as: :labelable, dependent: :destroy
@@ -77,7 +77,7 @@ class Ticket < ActiveRecord::Base
       all
     end
   }
-  
+
   scope :filter_by_user_id, ->(user_id) {
     if user_id
       where(user_id: user_id)
@@ -177,8 +177,8 @@ class Ticket < ActiveRecord::Base
   end
 
   def self.recaptcha_keys_present?
-    !Recaptcha.configuration.public_key.blank? ||
-      !Recaptcha.configuration.private_key.blank?
+    !Recaptcha.configuration.site_key.blank? ||
+      !Recaptcha.configuration.secret_key.blank?
   end
 
   def save_with_label(label_name)
@@ -213,8 +213,7 @@ class Ticket < ActiveRecord::Base
     end
 
     def log_status_change
-
-      if self.changed.include? 'status'
+      if saved_changes.transform_values(&:first).include? 'status'
         previous = status_changes.ordered.last
 
         unless previous.nil?

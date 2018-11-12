@@ -19,6 +19,7 @@ require 'test_helper'
 class NotificationMailerTest < ActionMailer::TestCase
 
   test 'should notify assignee of new ticket' do
+    Tenant.current_domain = tenants(:main).domain
     ticket = tickets(:problem)
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -28,9 +29,11 @@ class NotificationMailerTest < ActionMailer::TestCase
     mail = ActionMailer::Base.deliveries.last
     assert_equal "<#{ticket.message_id}>", mail['Message-ID'].to_s
     assert_equal email_addresses(:brimir).formatted, mail['From'].to_s
+    assert_equal 'support@test.host', mail['Return-Path'].to_s
   end
 
   test 'should notify user of new reply' do
+    Tenant.current_domain = tenants(:main).domain
     reply = replies(:solution)
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -41,6 +44,7 @@ class NotificationMailerTest < ActionMailer::TestCase
     assert_equal "<#{reply.ticket.message_id}>", mail['In-Reply-To'].to_s
     assert_equal "<#{reply.message_id}>", mail['Message-ID'].to_s
     assert_equal email_addresses(:brimir).formatted, mail['From'].to_s
+    assert_equal 'support@test.host', mail['Return-Path'].to_s
   end
 
   test 'should notify user of account creation' do

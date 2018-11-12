@@ -7,7 +7,7 @@ You should take a look at the [upstream](https://github.com/ivaldi/brimir) for t
 ### Camdram Installation Instructions
 1. `git clone https://github.com/camdram/brimir.git && cd brimir`
 2. Copy the `Procfile.local` file from old to new 
-3. `bundle install --without sqlite postgresql development test --deployment`
+3. `bundle install --without development test --deployment`
 4. `procodile run -- bundle exec rake db:migrate`
 5. `procodile run -- bundle exec rake assets:precompile`
 6. `procodile start`

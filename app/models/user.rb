@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   devise Rails.application.config.devise_authentication_strategy, :recoverable,
     :rememberable, :trackable, :validatable,:omniauthable,
     omniauth_providers: [:camdram]
@@ -27,10 +27,10 @@ class User < ActiveRecord::Base
       foreign_key: 'assignee_id', dependent: :nullify
   has_many :notifications, dependent: :destroy
 
-  belongs_to :schedule
+  belongs_to :schedule, optional: true
 
-  # identities for omniauth
-  has_many :identities
+  # identities for omniaut
+  has_many :identitie
 
   has_and_belongs_to_many :unread_tickets, class_name: 'Ticket'
 
@@ -44,6 +44,14 @@ class User < ActiveRecord::Base
   def ldap_before_save
     self.agent = true
   end
+
+  scope :actives, -> {
+    where(active: true)
+  }
+
+  scope :inactives, -> {
+    where(active: false)
+  }
 
   scope :agents, -> {
     where(agent: true)
@@ -73,6 +81,10 @@ class User < ActiveRecord::Base
     super || name_from_email_address
   end
 
+  def locale
+    (super.blank? ? Rails.configuration.i18n.default_locale : super).to_sym
+  end
+
   def is_working?
     #sanity checks for default behaviour
     return true unless schedule_enabled # this is the default behaviour
@@ -84,9 +96,10 @@ class User < ActiveRecord::Base
     email.split('@').first
   end
 
+  # notify only active agents
   def self.agents_to_notify
     User.agents
-        .where(notify: true)
+        .where(notify: true).actives
   end
 
   # Does the email address of this user belong to the ticket system
@@ -121,6 +134,10 @@ class User < ActiveRecord::Base
     if encrypted_password.blank?
       self.password = Devise.friendly_token.first(12)
     end
+  end
+
+  def active_for_authentication?
+      super and self.active
   end
 
   def self.from_omniauth(auth)

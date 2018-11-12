@@ -4,14 +4,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Brimir unreleased (to be announced)
 ### Added
+- Ability to import .eml files for mails sent to wrong email address. Contributed by @fiedl.
+- Ability to rename tickets. Contributed by @fiedl.
+- Canned replies. Contributed by @svoop.
+- Support for incoming mail from Mailgun. Contributed by @svoop.<br>:warning: If you are already using the `post-mail` script, you must update the `aliases` file of your MTA according to the example mentioned in the README!
 
 ### Changed
+- Better error messages when an invalid input is given for non-signed in users. Contributed by @mickael-kerjean.
+- Better coverage for ticket creation, now covering situations with captcha. Contributed by @git-jls.
+- Moved Brimir to Rails version 5.0.0.1. Contributed by @git-jls.
+- Only add "New reply: " to subject of agent mails.
+- Return-Path is now filled with Tenant from address, to capture bounce mails when using aliases.
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+- Unread ticket status resulted in a big performance regression #345.
 
 ### Security
 
@@ -27,6 +37,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Changed
 - Better error messages when an invalid input is given for non-signed in users. Contributed by @mickael-kerjean.
 - Better coverage for ticket creation, now covering situations with captcha. Contributed by @git-jls.
+- Removed unused code. Contributed by @git-jls
 
 ### Fixed
 - Fixed issue with tickets missing a message_id. Contributed by @git-jls.
@@ -35,6 +46,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Fixed issue for non signed in users not able to create tickets from the web gui when the captcha is disabled. Contributed by @git-jls.
 - Fixed issue with zone not being properly taken into account if schedule is set and ticket is created. by @git-jls.
 - Fixed issue with save_with_label method being called on a reply. Contributed by @git-jls.
+- Fixed issue with tickets not getting deleted from the trash. Contributed by @git-jls
 
 ## Brimir 0.7.2 (2016-11-11)
 ### Added

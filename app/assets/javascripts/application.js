@@ -19,7 +19,9 @@
 //= require select2
 //= require trix
 //= require tickets
+//= require replies
 //= require fancybox
+//= require jquery-visibility
 
 (function() {
 
