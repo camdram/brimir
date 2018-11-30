@@ -27,6 +27,7 @@ class OmniauthController < Devise::OmniauthCallbacksController
       societies = JSON.parse(response.body)
       societies.each do |soc|
         if soc["id"].to_s == "38" # Camdram meta-society ID
+          @user.agent = true
           sign_in_and_redirect @user, event: :authentication
           set_flash_message(:notice, :success, kind: "Camdram") if is_navigational_format?
           return
